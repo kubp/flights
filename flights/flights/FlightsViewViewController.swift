@@ -8,6 +8,32 @@
 
 import UIKit
 
+import Foundation
+
+struct MyGitHub: Codable {
+    
+    let name: String?
+    let location: String?
+    let blog: URL?
+    let followers: Int?
+    let avatarUrl: URL?
+    let repos: Int?
+    
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case location
+        case blog
+        case followers
+        case repos = "public_repos"
+        case avatarUrl = "avatar_url"
+        
+    }
+}
+
+
+
+
+
 
 class FLightCell: UITableViewCell{
 
@@ -26,10 +52,59 @@ class FLightCell: UITableViewCell{
 
 class FlightsViewViewController: UIViewController, UITableViewDataSource, UITableViewDelegate  {
 
+    let singleton = searchResult.shared
+    
+    var animals: [String] = searchResult.shared.data
 
-    let animals = ["cast", "sadsd"]
+
+    @IBOutlet weak var button: UIButton!
+    
+    @IBAction func clicked(_ sender: Any) {
+        searchResult.shared.data = ["Aaaa"]
+        animals = ["sads"]
+        
+        
+        print(searchResult.shared.data)
+        FlightsTable?.reloadData()
+        
+        
+        
+        guard let gitUrl = URL(string: "https://api.github.com/users/kubp") else { return }
+        
+        URLSession.shared.dataTask(with: gitUrl) { (data, response
+            , error) in
+            
+            guard let data = data else { return }
+            do {
+                
+                let decoder = JSONDecoder()
+                let gitData = try decoder.decode(MyGitHub.self, from: data)
+                
+                
+                
+                DispatchQueue.main.sync {
+                    if let gimage = gitData.avatarUrl {
+                        let data = try? Data(contentsOf: gimage)
+                        let image: UIImage = UIImage(data: data!)!
+
+                    }
+                    
+                    
+                   print(gitData)
+                }
+                
+            } catch let err {
+                print("Err", err)
+            }
+            }.resume()
+        
+        
+        
+
+    }
     
 
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! FLightCell
@@ -50,6 +125,7 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
     override func viewDidLoad() {
         super.viewDidLoad()
 
+
         // Do any additional setup after loading the view.
     }
 
@@ -57,6 +133,7 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
 
     
     // MARK: - Navigation
