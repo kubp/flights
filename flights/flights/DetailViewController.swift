@@ -19,11 +19,15 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var cityFrom: UILabel!
     @IBOutlet weak var price: UILabel!
     @IBOutlet weak var cityTo: UILabel!
+    @IBOutlet weak var favouriteButton: UIButton!
     @IBAction func favouritesClick(_ sender: Any) {
         self.saveToFavourites()
     }
     
-
+    @IBAction func goBack(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     var passedValue: Flight? = nil
     
     
@@ -54,7 +58,7 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
  
 
         if let cp = price {
-            cp.text = String(passedValue?.price ?? 0)
+            cp.text = String(passedValue?.price ?? 0) + " €"
         }
 
 
@@ -96,6 +100,9 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
         
         mapView.centerCoordinate = coords2
         //mapView.region = MKCoordinateRegion(center: coords2, span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
+        
+        favouriteButton.layer.cornerRadius = 10; // this value vary as per your desire
+        favouriteButton.clipsToBounds = true;
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {

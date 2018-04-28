@@ -73,7 +73,10 @@ class FLightCell: UITableViewCell{
 }
 
 class FlightsViewViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate  {
-
+    @IBOutlet weak var searchTextField: UITextField!
+    
+    
+    
     let singleton = searchResult.shared
     
     var tableFlights: [Flight] = []
@@ -90,15 +93,17 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
     
     @IBAction func clicked(_ sender: Any) {
 
-        saveToFavourites()
-        
-        
-
+    }
+    
+    @IBAction func searchFlightsAction(_ sender: Any) {
+        var text: String = searchTextField.text!
+        print(text)
+        loadFLightsFromApi(to: text)
+    
     }
     
     
-    
-    func loadFLightsFromApi(){
+    func loadFLightsFromApi(to: String = "anywhere"){
 
         let lat : NSNumber = NSNumber(value: self.coordinates!.latitude)
         let lng : NSNumber = NSNumber(value: self.coordinates!.longitude)
@@ -110,7 +115,7 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
         let apiCoordinates = apiLat + "-" + apiLng + "-250km"
         print(apiCoordinates)
         
-        guard let gitUrl = URL(string: "https://api.skypicker.com/flights?adults=1&affilid=stories&asc=1&children=0&dateFrom=28%2F04%2F2018&dateTo=28%2F05%2F2018&daysInDestinationFrom=2&daysInDestinationTo=10&featureName=results&flyFrom="+apiCoordinates+"&infants=0&limit=60&locale=us&offset=0&one_per_date=0&oneforcity=0&partner=skypicker&returnFrom=&returnTo=&sort=quality&to=anywhere&typeFlight=return&v=3&wait_for_refresh=0") else { return }
+        guard let gitUrl = URL(string: "https://api.skypicker.com/flights?adults=1&affilid=stories&asc=1&children=0&dateFrom=28%2F04%2F2018&dateTo=28%2F05%2F2018&daysInDestinationFrom=2&daysInDestinationTo=10&featureName=results&flyFrom="+apiCoordinates+"&infants=0&limit=60&locale=us&offset=0&one_per_date=0&oneforcity=0&partner=skypicker&returnFrom=&returnTo=&sort=quality&to="+to+"&typeFlight=return&v=3&wait_for_refresh=0") else { return }
         
         URLSession.shared.dataTask(with: gitUrl) { (data, response
             , error) in
@@ -234,7 +239,9 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
-        
+        searchTextField.borderStyle = .roundedRect;
+        searchTextField.backgroundColor = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        searchTextField.layer.cornerRadius=8.0
         
     }
 
@@ -314,8 +321,12 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
             
             print(self.tableFlights[row!])
             
+            let navVC = segue.destination as? UINavigationController
             
-            let destinationVC = segue.destination as! DetailViewController
+            let destinationVC = navVC?.viewControllers.first as! DetailViewController
+            
+
+        
             destinationVC.passedValue = self.tableFlights[row!]
             
         }

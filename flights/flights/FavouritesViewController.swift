@@ -13,7 +13,10 @@ import CoreData
 class FavouritesViewController: UITableViewController {
 var people: [NSManagedObject] = []
    
-    @IBOutlet weak var flightFrom: UILabel!
+
+    @IBAction func back(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
