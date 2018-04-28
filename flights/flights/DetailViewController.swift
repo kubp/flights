@@ -10,20 +10,23 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
+    @IBOutlet weak var flightName: UILabel!
     @IBOutlet weak var detailDescriptionLabel: UILabel!
-
+     var passedValue: String = "Anonymous"
+    
 
     func configureView() {
         // Update the user interface for the detail item.
-        if let detail = detailItem {
-            if let label = detailDescriptionLabel {
-                label.text = detail.timestamp!.description
+
+            if let label = flightName {
+                label.text = passedValue
             }
-        }
+        
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view, typically from a nib.
         configureView()
     }
