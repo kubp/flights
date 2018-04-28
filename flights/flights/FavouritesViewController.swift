@@ -33,9 +33,14 @@ var people: [NSManagedObject] = []
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = people[indexPath.row].value(forKey: "cityFrom") as? String
         
-        cell.detailTextLabel?.text = "aaaa"
+        let from = people[indexPath.row].value(forKey: "cityFrom") as? String
+        let to = people[indexPath.row].value(forKey: "cityTo") as? String
+        let price = people[indexPath.row].value(forKey: "price") as? Int
+        
+        cell.textLabel?.text = from! + " → " + to!
+        
+        cell.detailTextLabel?.text = String(price!) + " €"
         return cell
     }
 

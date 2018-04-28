@@ -5,14 +5,11 @@
 //  Created by user on 4/21/18.
 //  Copyright © 2018 user. All rights reserved.
 //
-
 import UIKit
-
 import Foundation
-
-
 import CoreData
-
+import MapKit
+import CoreLocation
 
 struct FlightsApi: Decodable {
     let currency: String
@@ -75,11 +72,17 @@ class FLightCell: UITableViewCell{
     @IBOutlet weak var tableView: UITableView!
 }
 
-class FlightsViewViewController: UIViewController, UITableViewDataSource, UITableViewDelegate  {
+class FlightsViewViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate  {
 
     let singleton = searchResult.shared
     
     var tableFlights: [Flight] = []
+    
+
+    let locationManager = CLLocationManager() // Add this statement
+    
+    var coordinates: CLLocationCoordinate2D? = nil
+
     
  
 
@@ -90,7 +93,24 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
         saveToFavourites()
         
         
-        guard let gitUrl = URL(string: "https://api.skypicker.com/flights?flyFrom=PRG&to=&dateFrom=18/06/2018&dateTo=25/06/2018") else { return }
+
+    }
+    
+    
+    
+    func loadFLightsFromApi(){
+
+        let lat : NSNumber = NSNumber(value: self.coordinates!.latitude)
+        let lng : NSNumber = NSNumber(value: self.coordinates!.longitude)
+        
+        //Store it into Dictionary
+        let apiLat = String(describing: lat)
+        let apiLng = String(describing: lng)
+        
+        let apiCoordinates = apiLat + "-" + apiLng + "-250km"
+        print(apiCoordinates)
+        
+        guard let gitUrl = URL(string: "https://api.skypicker.com/flights?adults=1&affilid=stories&asc=1&children=0&dateFrom=28%2F04%2F2018&dateTo=28%2F05%2F2018&daysInDestinationFrom=2&daysInDestinationTo=10&featureName=results&flyFrom="+apiCoordinates+"&infants=0&limit=60&locale=us&offset=0&one_per_date=0&oneforcity=0&partner=skypicker&returnFrom=&returnTo=&sort=quality&to=anywhere&typeFlight=return&v=3&wait_for_refresh=0") else { return }
         
         URLSession.shared.dataTask(with: gitUrl) { (data, response
             , error) in
@@ -99,7 +119,7 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
             do {
                 
                 let decoder = JSONDecoder()
-           
+                
                 guard let blog = try? JSONDecoder().decode(FlightsApi.self, from: data) else {
                     print("Error: Couldn't decode data into Blog")
                     return
@@ -111,13 +131,32 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
                 
                 for article in blog.data {
                     
-                        
-                    let flight = Flight(mapIdfrom: article.mapIdfrom, flyFrom: article.flyFrom, fly_duration: article.fly_duration, flyTo: article.flyTo, aTime: article.aTime, dTime: article.dTime, price: article.price, cityFrom: article.cityFrom, cityTo: article.cityTo, route: [Route(latFrom: article.route[0].latFrom, lngTo: article.route[0].lngTo, latTo: article.route[0].latTo, lngFrom: article.route[0].lngFrom)])
+                    
+                    
+                    var routes: [Route] = []
+                    for route in  article.route {
+                        routes = routes + [Route(latFrom: route.latFrom,
+                                                 lngTo: route.lngTo,
+                                                 latTo: route.latTo,
+                                                 lngFrom: route.lngFrom
+                            )]
+                    }
+                    
+                    let flight = Flight(mapIdfrom: article.mapIdfrom,
+                                        flyFrom: article.flyFrom,
+                                        fly_duration: article.fly_duration,
+                                        flyTo: article.flyTo,
+                                        aTime: article.aTime,
+                                        dTime: article.dTime,
+                                        price: article.price,
+                                        cityFrom: article.cityFrom,
+                                        cityTo: article.cityTo,
+                                        route: routes)
                     
                     allFlights = allFlights + [flight]
                     
                     
-            
+                    
                 }
                 
                 
@@ -129,18 +168,17 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
                     self.FlightsTable?.reloadData()
                 }
                 //print(searchResult.shared.data)
-               
                 
                 
-    
+                
+                
             } catch let err {
                 print("Err", err)
             }
             }.resume()
         
         
-         self.FlightsTable?.reloadData()
-
+        self.FlightsTable?.reloadData()
     }
     
 
@@ -191,7 +229,11 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
     @IBOutlet weak var FlightsTable: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        
         
         
     }
@@ -200,6 +242,19 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        let location = locations[0]
+        
+        let center = location.coordinate
+        self.coordinates = location.coordinate
+        
+        loadFLightsFromApi()
+        
+    }
+    
+    
     
     
     func saveToFavourites(){
@@ -215,14 +270,14 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
 
 
         // Create Batch Delete Request
-//        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: request)
-//
-//        do {
-//            try context.execute(batchDeleteRequest)
-//
-//        } catch {
-//            // Error Handling
-//        }
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+
+        do {
+            try context.execute(batchDeleteRequest)
+
+        } catch {
+            // Error Handling
+        }
 
         
         do {

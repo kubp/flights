@@ -12,10 +12,9 @@
         <attribute name="cityTo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="price" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
         <element name="Event" positionX="261" positionY="189" width="128" height="60"/>
-        <element name="Favourites" positionX="72" positionY="339" width="128" height="135"/>
+        <element name="Favourites" positionX="72" positionY="339" width="128" height="120"/>
     </elements>
 </model>

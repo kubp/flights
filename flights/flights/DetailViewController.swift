@@ -17,6 +17,7 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var cityFrom: UILabel!
+    @IBOutlet weak var price: UILabel!
     @IBOutlet weak var cityTo: UILabel!
     @IBAction func favouritesClick(_ sender: Any) {
         self.saveToFavourites()
@@ -48,6 +49,14 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
         if let ct = cityTo {
             ct.text = passedValue?.cityTo
         }
+        
+
+ 
+
+        if let cp = price {
+            cp.text = String(passedValue?.price ?? 0)
+        }
+
 
         let initialLocation = CLLocation(latitude: 33.9424955, longitude: -118.4080684)
         
@@ -65,15 +74,23 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
         let coords2 = CLLocationCoordinate2D(latitude: CLLocationDegrees(passedValue!.route[0].latFrom), longitude: CLLocationDegrees(passedValue!.route[0].lngFrom))
         
         
+        var coordinates: [CLLocationCoordinate2D] = []
+        for route in passedValue!.route {
+
+            let LAX = CLLocation(latitude: CLLocationDegrees(route.latFrom), longitude: CLLocationDegrees(route.lngFrom))
+            let JFK = CLLocation(latitude: CLLocationDegrees(route.latTo), longitude: CLLocationDegrees(route.lngTo))
+
+         coordinates = coordinates + [LAX.coordinate, JFK.coordinate]
+
+        }
+
+        let geodesicPolyline = MKGeodesicPolyline(coordinates: &coordinates, count: coordinates.count)
         
-        
-        let LAX = CLLocation(latitude: CLLocationDegrees(passedValue!.route[0].latFrom), longitude: CLLocationDegrees(passedValue!.route[0].lngFrom))
-        let JFK = CLLocation(latitude: CLLocationDegrees(passedValue!.route[0].latTo), longitude: CLLocationDegrees(passedValue!.route[0].lngTo))
-        
-        var coordinates = [LAX.coordinate, JFK.coordinate]
-        let geodesicPolyline = MKGeodesicPolyline(coordinates: &coordinates, count: 2)
+
         
         mapView.add(geodesicPolyline)
+        
+        
         
         mapView.delegate = self
         
@@ -112,8 +129,11 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
         let newUser = NSManagedObject(entity: entity!, insertInto: context)
         
         
-        newUser.setValue("from dtl", forKey: "cityFrom")
-        newUser.setValue("ads", forKey: "cityTo")
+        newUser.setValue(passedValue?.cityFrom, forKey: "cityFrom")
+        newUser.setValue(passedValue?.cityTo, forKey: "cityTo")
+        newUser.setValue(passedValue?.aTime, forKey: "aTime")
+        newUser.setValue(passedValue?.dTime, forKey: "dTime")
+        newUser.setValue(passedValue?.price, forKey: "price")
         
         
         do {

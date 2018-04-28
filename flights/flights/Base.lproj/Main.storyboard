@@ -267,14 +267,14 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="axl-oM-Cos">
-                                            <rect key="frame" x="20" y="5" width="33.5" height="20"/>
+                                            <rect key="frame" x="20.000000000000004" y="5" width="33.333333333333336" height="20.333333333333332"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="kj3-9g-sti">
-                                            <rect key="frame" x="20" y="25" width="43.5" height="14.5"/>
+                                            <rect key="frame" x="19.999999999999996" y="25.333333333333332" width="43.666666666666664" height="14.333333333333334"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
@@ -289,7 +289,7 @@
                             <outlet property="delegate" destination="XLH-Nx-Zu3" id="drh-mg-Kkl"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="mXz-ZO-XWF"/>
+                    <navigationItem key="navigationItem" title="Favourites trips" id="mXz-ZO-XWF"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hzY-hy-yVE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -303,7 +303,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="yEz-xO-eKN">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="mutedStandard" rotateEnabled="NO" pitchEnabled="NO" showsBuildings="NO" showsCompass="NO" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yEz-xO-eKN">
                                 <rect key="frame" x="0.0" y="248" width="414" height="488"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </mapView>
@@ -335,6 +335,13 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6sI-Uv-EfI">
+                                        <rect key="frame" x="140" y="139" width="116" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.43126285076141357" green="0.6745026707649231" blue="0.97651159763336182" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
@@ -347,6 +354,7 @@
                         <outlet property="cityFrom" destination="pDa-oP-YmL" id="bu1-CC-qrR"/>
                         <outlet property="cityTo" destination="2Jb-mY-kra" id="8jF-or-wev"/>
                         <outlet property="mapView" destination="yEz-xO-eKN" id="cm8-rb-ljs"/>
+                        <outlet property="price" destination="6sI-Uv-EfI" id="hnB-bM-0RN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="irE-nX-bWh" userLabel="First Responder" sceneMemberID="firstResponder"/>
