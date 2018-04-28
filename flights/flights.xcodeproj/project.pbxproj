@@ -18,6 +18,7 @@
 		CE029E2520887F24006808B9 /* FlightViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE029E2420887F24006808B9 /* FlightViewCell.swift */; };
 		CE639601208F33290056C556 /* searchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE639600208F33290056C556 /* searchResult.swift */; };
 		CE639603208F35420056C556 /* searchFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE639602208F35420056C556 /* searchFormView.swift */; };
+		CEB8A14B209484E7005AB028 /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB8A14A209484E7005AB028 /* FavouritesViewController.swift */; };
 		CEFA9183208B471E002150C9 /* FlightsViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFA9182208B471E002150C9 /* FlightsViewViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		CE029E2420887F24006808B9 /* FlightViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightViewCell.swift; sourceTree = "<group>"; };
 		CE639600208F33290056C556 /* searchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = searchResult.swift; sourceTree = "<group>"; };
 		CE639602208F35420056C556 /* searchFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = searchFormView.swift; sourceTree = "<group>"; };
+		CEB8A14A209484E7005AB028 /* FavouritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		CEFA9182208B471E002150C9 /* FlightsViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightsViewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,6 +74,7 @@
 				CE029DEB208874EB006808B9 /* MasterViewController.swift */,
 				CE029DED208874EB006808B9 /* DetailViewController.swift */,
 				CE029DEF208874EB006808B9 /* Main.storyboard */,
+				CEB8A14A209484E7005AB028 /* FavouritesViewController.swift */,
 				CE029E2420887F24006808B9 /* FlightViewCell.swift */,
 				CE029DFD20887B81006808B9 /* UIFLightViewTableViewController.swift */,
 				CEFA9182208B471E002150C9 /* FlightsViewViewController.swift */,
@@ -165,6 +168,7 @@
 				CE029DEC208874EB006808B9 /* MasterViewController.swift in Sources */,
 				CE029DEE208874EB006808B9 /* DetailViewController.swift in Sources */,
 				CE029DFE20887B81006808B9 /* UIFLightViewTableViewController.swift in Sources */,
+				CEB8A14B209484E7005AB028 /* FavouritesViewController.swift in Sources */,
 				CEFA9183208B471E002150C9 /* FlightsViewViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

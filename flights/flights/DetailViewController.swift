@@ -7,42 +7,136 @@
 //
 
 import UIKit
+import MapKit
+import Foundation
 
-class DetailViewController: UIViewController {
 
-    @IBOutlet weak var flightName: UILabel!
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
-     var passedValue: String = "Anonymous"
+import CoreData
+
+class DetailViewController: UIViewController, MKMapViewDelegate {
+    
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var cityFrom: UILabel!
+    @IBOutlet weak var cityTo: UILabel!
+    @IBAction func favouritesClick(_ sender: Any) {
+        self.saveToFavourites()
+    }
     
 
+    var passedValue: Flight? = nil
+    
+    
+    let regionRadius: CLLocationDistance = 3000000
+    func centerMapOnLocation(location: CLLocation) {
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate,
+                                                                  regionRadius, regionRadius)
+        mapView.setRegion(coordinateRegion, animated: true)
+        
+  
+    }
+    
+    
+    
+    
     func configureView() {
         // Update the user interface for the detail item.
+        
+        if let cf = cityFrom {
+            cf.text = passedValue?.cityFrom
+        }
+        
+        if let ct = cityTo {
+            ct.text = passedValue?.cityTo
+        }
 
-            if let label = flightName {
-                label.text = passedValue
-            }
+        let initialLocation = CLLocation(latitude: 33.9424955, longitude: -118.4080684)
+        
+        centerMapOnLocation(location: initialLocation)
+        
         
     }
-
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view, typically from a nib.
         configureView()
+        // Do any additional setup after loading the view, typically from a nib.
+        
+        let coords2 = CLLocationCoordinate2D(latitude: CLLocationDegrees(passedValue!.route[0].latFrom), longitude: CLLocationDegrees(passedValue!.route[0].lngFrom))
+        
+        
+        
+        
+        let LAX = CLLocation(latitude: CLLocationDegrees(passedValue!.route[0].latFrom), longitude: CLLocationDegrees(passedValue!.route[0].lngFrom))
+        let JFK = CLLocation(latitude: CLLocationDegrees(passedValue!.route[0].latTo), longitude: CLLocationDegrees(passedValue!.route[0].lngTo))
+        
+        var coordinates = [LAX.coordinate, JFK.coordinate]
+        let geodesicPolyline = MKGeodesicPolyline(coordinates: &coordinates, count: 2)
+        
+        mapView.add(geodesicPolyline)
+        
+        mapView.delegate = self
+        
+        mapView.centerCoordinate = coords2
+        //mapView.region = MKCoordinateRegion(center: coords2, span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
     }
-
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        //Return an `MKPolylineRenderer` for the `MKPolyline` in the `MKMapViewDelegate`s method
+        if let polyline = overlay as? MKPolyline {
+            let renderer = MKPolylineRenderer(polyline: polyline)
+            renderer.lineWidth = 3.0
+            renderer.alpha = 0.5
+            renderer.strokeColor = UIColor.blue
+            
+            return renderer
+            
+        }
+        fatalError("Something wrong...")
+        //return MKOverlayRenderer()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
+    
+    func saveToFavourites(){
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        let context = appDelegate.persistentContainer.viewContext
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Favourites", in: context)
+        let newUser = NSManagedObject(entity: entity!, insertInto: context)
+        
+        
+        newUser.setValue("from dtl", forKey: "cityFrom")
+        newUser.setValue("ads", forKey: "cityTo")
+        
+        
+        do {
+            
+            try context.save()
+            
+        } catch {
+            
+            print("Failed saving")
+        }
+        
 
+        
+    }
+    
+    
     var detailItem: Event? {
         didSet {
             // Update the view.
             configureView()
         }
     }
-
-
+    
+    
 }
 

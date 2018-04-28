@@ -10,24 +10,42 @@ import UIKit
 
 import Foundation
 
-struct MyGitHub: Codable {
+
+import CoreData
+
+
+struct FlightsApi: Decodable {
+    let currency: String
+    let data: [FlightData]
+    // let route: [Route]
     
-    let name: String?
-    let location: String?
-    let blog: URL?
-    let followers: Int?
-    let avatarUrl: URL?
-    let repos: Int?
-    
-    private enum CodingKeys: String, CodingKey {
-        case name
-        case location
-        case blog
-        case followers
-        case repos = "public_repos"
-        case avatarUrl = "avatar_url"
-        
+    enum CodingKeys : String, CodingKey {
+        case currency
+        case data = "data"
+        // case route = "route"
     }
+}
+
+struct RouteData: Decodable {
+    let latFrom: Float
+    let lngTo: Float
+    let latTo: Float
+    let lngFrom: Float
+}
+
+
+struct FlightData: Decodable {
+    let mapIdfrom: String
+    let flyFrom: String
+    let fly_duration: String
+    let flyTo: String
+    let aTime: Date
+    let dTime: Date
+    let price: Int
+    let cityFrom: String
+    let cityTo: String
+    
+    let route: [RouteData]
 }
 
 
@@ -35,16 +53,23 @@ struct MyGitHub: Codable {
 
 
 
-class FLightCell: UITableViewCell{
 
-    @IBOutlet weak var label: UILabel!
+class FLightCell: UITableViewCell{
+    @IBOutlet weak var dateFrom: UILabel!
+    @IBOutlet weak var cityFrom: UILabel!
+    @IBOutlet weak var dateTo: UILabel!
+    @IBOutlet weak var cityTo: UILabel!
+    @IBOutlet weak var duration: UILabel!
+    @IBOutlet weak var price: UILabel!
+
+  
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected cell \(indexPath.row)")
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.frame = UIEdgeInsetsInsetRect(contentView.frame, UIEdgeInsetsMake(0, 20, 0, 20))
+      //  contentView.frame = UIEdgeInsetsInsetRect(contentView.frame, UIEdgeInsetsMake(0, 20, 0, 20))
     }
     
     @IBOutlet weak var tableView: UITableView!
@@ -54,22 +79,18 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
 
     let singleton = searchResult.shared
     
-    var animals: [String] = searchResult.shared.data
-
+    var tableFlights: [Flight] = []
+    
+ 
 
     @IBOutlet weak var button: UIButton!
     
     @IBAction func clicked(_ sender: Any) {
-        searchResult.shared.data = ["Aaaa"]
-        animals = ["sads"]
+
+        saveToFavourites()
         
         
-        print(searchResult.shared.data)
-        FlightsTable?.reloadData()
-        
-        
-        
-        guard let gitUrl = URL(string: "https://api.github.com/users/kubp") else { return }
+        guard let gitUrl = URL(string: "https://api.skypicker.com/flights?flyFrom=PRG&to=&dateFrom=18/06/2018&dateTo=25/06/2018") else { return }
         
         URLSession.shared.dataTask(with: gitUrl) { (data, response
             , error) in
@@ -78,28 +99,47 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
             do {
                 
                 let decoder = JSONDecoder()
-                let gitData = try decoder.decode(MyGitHub.self, from: data)
+           
+                guard let blog = try? JSONDecoder().decode(FlightsApi.self, from: data) else {
+                    print("Error: Couldn't decode data into Blog")
+                    return
+                }
                 
+                print("blog title: \(blog.currency)")
+                
+                var allFlights:[Flight] = []
+                
+                for article in blog.data {
+                    
+                        
+                    let flight = Flight(mapIdfrom: article.mapIdfrom, flyFrom: article.flyFrom, fly_duration: article.fly_duration, flyTo: article.flyTo, aTime: article.aTime, dTime: article.dTime, price: article.price, cityFrom: article.cityFrom, cityTo: article.cityTo, route: [Route(latFrom: article.route[0].latFrom, lngTo: article.route[0].lngTo, latTo: article.route[0].latTo, lngFrom: article.route[0].lngFrom)])
+                    
+                    allFlights = allFlights + [flight]
+                    
+                    
+            
+                }
                 
                 
                 DispatchQueue.main.sync {
-                    if let gimage = gitData.avatarUrl {
-                        let data = try? Data(contentsOf: gimage)
-                        let image: UIImage = UIImage(data: data!)!
-
-                    }
+                    searchResult.shared.data = allFlights
+                    //animals = ["sads"]
                     
-                    
-                   print(gitData)
+                    self.tableFlights = allFlights
+                    self.FlightsTable?.reloadData()
                 }
+                //print(searchResult.shared.data)
+               
                 
+                
+    
             } catch let err {
                 print("Err", err)
             }
             }.resume()
         
         
-        
+         self.FlightsTable?.reloadData()
 
     }
     
@@ -109,14 +149,41 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! FLightCell
         cell.backgroundColor = UIColor.clear
-        cell.label.text = animals[indexPath.row]
+  
+        
+        let formatter = DateFormatter()
+        // initially set the format based on your datepicker date / server String
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        let myString = formatter.string(from: Date()) // string purpose I add here
+        // convert your string to date
+    
+        formatter.dateFormat = "dd-MMMM"
+        // again convert your date to string
+        let arrival = formatter.string(from: tableFlights[indexPath.row].aTime)
+        let departure = formatter.string(from: tableFlights[indexPath.row].dTime)
+        
+        
+        
+        
+        cell.cityFrom.text = tableFlights[indexPath.row].cityFrom
+        
+        cell.cityTo.text = tableFlights[indexPath.row].cityTo
+        
+        
+        cell.dateFrom.text = departure
+        cell.dateTo.text = arrival
+        
+        cell.duration.text = tableFlights[indexPath.row].fly_duration
+        cell.price.text = String(tableFlights[indexPath.row].price) + "€"
 
+        
         return cell
         
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return animals.count
+        return tableFlights.count
     }
     
 
@@ -124,14 +191,57 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
     @IBOutlet weak var FlightsTable: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-
-
-        // Do any additional setup after loading the view.
+    
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    
+    func saveToFavourites(){
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        let context = appDelegate.persistentContainer.viewContext
+        
+       
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Favourites")
+//        //request.predicate = NSPredicate(format: "age = %@", "12")
+        request.returnsObjectsAsFaults = false
+
+
+
+        // Create Batch Delete Request
+//        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+//
+//        do {
+//            try context.execute(batchDeleteRequest)
+//
+//        } catch {
+//            // Error Handling
+//        }
+
+        
+        do {
+            let result = try context.fetch(request)
+            let f = result as! [NSManagedObject]
+            
+            print(f)
+            
+            for data in result as! [NSManagedObject] {
+                let a = data.value(forKey: "cityFrom") as! String
+                print(a)
+                print(data.value(forKey: "cityFrom") as! String)
+            }
+            
+        } catch {
+            
+            print("Failed")
+        }
+
     }
     
 
@@ -142,10 +252,29 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        var passedValue = FlightsTable.indexPathForSelectedRow?.row
-        
-        let destinationVC = segue.destination as! DetailViewController
-        destinationVC.passedValue = "ads"
+
+        if(segue.identifier == "detailSegue"){
+            let row = FlightsTable.indexPathForSelectedRow?.row
+            
+            
+            print(self.tableFlights[row!])
+            
+            
+            let destinationVC = segue.destination as! DetailViewController
+            destinationVC.passedValue = self.tableFlights[row!]
+            
+        }
+
+        if(segue.identifier == "favouritesSegue"){
+//            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//
+//            let context = appDelegate.persistentContainer.viewContext
+//
+//            let destinationVC = segue.destination as! FavouritesViewController
+//
+//            print(destinationVC)
+         //   destinationVC.context = context
+        }
         
         
     }

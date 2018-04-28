@@ -10,7 +10,7 @@ import UIKit
 
 class searchFormView: UIView {
     @IBAction func search(_ sender: Any) {
-        searchResult.shared.data = ["Aaaa"]
+        searchResult.shared.data = []
         
     //    FlightsViewViewController.tb
     }
