@@ -12,7 +12,6 @@ import CoreData
 
 class FavouritesViewController: UITableViewController {
 var people: [NSManagedObject] = []
-   
     
     @IBAction func back(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
@@ -20,11 +19,6 @@ var people: [NSManagedObject] = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     override func tableView(_ tableView: UITableView,
@@ -32,7 +26,6 @@ var people: [NSManagedObject] = []
         return people.count
     }
     
-
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
@@ -57,7 +50,6 @@ var people: [NSManagedObject] = []
         // Dispose of any resources that can be recreated.
     }
 
-    
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         guard let appDelegate =
             UIApplication.shared.delegate as? AppDelegate else {
@@ -78,12 +70,10 @@ var people: [NSManagedObject] = []
     // MARK: - Table view data source
 
 
-
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //1
         guard let appDelegate =
             UIApplication.shared.delegate as? AppDelegate else {
                 return
@@ -92,27 +82,8 @@ var people: [NSManagedObject] = []
         let managedContext =
             appDelegate.persistentContainer.viewContext
         
-        //2
         let fetchRequest =
             NSFetchRequest<NSManagedObject>(entityName: "Favourites")
-        
-        
-        do {
-            let result = try managedContext.fetch(fetchRequest)
-            let f = result as! [NSManagedObject]
-            
-            print(f)
-            
-            for data in result as! [NSManagedObject] {
-                let a = data.value(forKey: "cityFrom") as! String
-                print(a)
-                print(data.value(forKey: "cityFrom") as! String)
-            }
-            
-        } catch {
-            
-            print("Failed")
-        }
         
         //3
         do {

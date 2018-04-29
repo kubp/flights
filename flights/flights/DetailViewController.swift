@@ -38,12 +38,7 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate,
                                                                   regionRadius, regionRadius)
         mapView.setRegion(coordinateRegion, animated: true)
-        
-  
     }
-    
-    
-    
     
     func configureView() {
         // Update the user interface for the detail item.
@@ -56,14 +51,9 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
             ct.text = passedValue?.cityTo
         }
         
-
- 
-
         if let cp = price {
             cp.text = String(passedValue?.price ?? 0) + " €"
         }
-
-        
 
         let formatter = DateFormatter()
         
@@ -94,7 +84,6 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
         
         let coords2 = CLLocationCoordinate2D(latitude: CLLocationDegrees(passedValue!.route[0].latFrom), longitude: CLLocationDegrees(passedValue!.route[0].lngFrom))
         
-        
         var coordinates: [CLLocationCoordinate2D] = []
         for route in passedValue!.route {
 
@@ -107,17 +96,11 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
 
         let geodesicPolyline = MKGeodesicPolyline(coordinates: &coordinates, count: coordinates.count)
         
-
-        
         mapView.add(geodesicPolyline)
-        
-        
         
         mapView.delegate = self
         
         mapView.centerCoordinate = coords2
-        //mapView.region = MKCoordinateRegion(center: coords2, span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
-        
         favouriteButton.layer.cornerRadius = 10; // this value vary as per your desire
         favouriteButton.clipsToBounds = true;
     }
@@ -129,17 +112,14 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
             renderer.lineWidth = 3.0
             renderer.alpha = 0.5
             renderer.strokeColor = UIColor.blue
-            
             return renderer
             
         }
         fatalError("Something wrong...")
-        //return MKOverlayRenderer()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     
@@ -150,29 +130,22 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
         let context = appDelegate.persistentContainer.viewContext
         
         let entity = NSEntityDescription.entity(forEntityName: "Favourites", in: context)
-        let newUser = NSManagedObject(entity: entity!, insertInto: context)
+        let newFligthData = NSManagedObject(entity: entity!, insertInto: context)
         
-        
-        newUser.setValue(passedValue?.cityFrom, forKey: "cityFrom")
-        newUser.setValue(passedValue?.cityTo, forKey: "cityTo")
-        newUser.setValue(passedValue?.aTime, forKey: "aTime")
-        newUser.setValue(passedValue?.dTime, forKey: "dTime")
-        newUser.setValue(passedValue?.price, forKey: "price")
-        
+        newFligthData.setValue(passedValue?.cityFrom, forKey: "cityFrom")
+        newFligthData.setValue(passedValue?.cityTo, forKey: "cityTo")
+        newFligthData.setValue(passedValue?.aTime, forKey: "aTime")
+        newFligthData.setValue(passedValue?.dTime, forKey: "dTime")
+        newFligthData.setValue(passedValue?.price, forKey: "price")
         
         do {
             
             try context.save()
             
         } catch {
-            
             print("Failed saving")
         }
-        
-
-        
     }
-    
     
     var detailItem: Event? {
         didSet {

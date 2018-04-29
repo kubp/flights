@@ -43,9 +43,8 @@ class Route{
     }
 }
 
-
+// struct maybe?
 class Flight {
-    
     
     public var mapIdfrom: String
     public var  flyFrom: String
@@ -75,7 +74,7 @@ class Flight {
     
 }
 
-
+// antipattern
 class searchResult {
     static let shared = searchResult()
     
