@@ -329,6 +329,20 @@
                                             <action selector="favouritesClick:" destination="qWo-re-kEN" eventType="touchUpInside" id="Zi2-uN-DI9"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="DateFrom" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dKC-hu-w5K">
+                                        <rect key="frame" x="30" y="90" width="102" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="DateTo" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q0J-Za-jAS">
+                                        <rect key="frame" x="253" y="88" width="83" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.35686274509803922" green="0.40392156862745099" blue="0.97647058823529409" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
@@ -347,6 +361,8 @@
                     <connections>
                         <outlet property="cityFrom" destination="pDa-oP-YmL" id="bu1-CC-qrR"/>
                         <outlet property="cityTo" destination="2Jb-mY-kra" id="8jF-or-wev"/>
+                        <outlet property="dateFrom" destination="dKC-hu-w5K" id="hGr-gE-thn"/>
+                        <outlet property="dateTo" destination="q0J-Za-jAS" id="hWB-44-zuC"/>
                         <outlet property="favouriteButton" destination="uRY-Cu-NlH" id="quT-9N-MhX"/>
                         <outlet property="mapView" destination="yEz-xO-eKN" id="cm8-rb-ljs"/>
                         <outlet property="price" destination="6sI-Uv-EfI" id="hnB-bM-0RN"/>

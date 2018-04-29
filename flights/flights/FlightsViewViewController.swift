@@ -84,8 +84,7 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
 
     let locationManager = CLLocationManager() // Add this statement
     
-    var coordinates: CLLocationCoordinate2D? = nil
-
+    var coordinates: CLLocationCoordinate2D? =  CLLocationCoordinate2D(latitude: CLLocationDegrees(50), longitude: CLLocationDegrees(14))
     
  
 
@@ -105,6 +104,7 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
     
     func loadFLightsFromApi(to: String = "anywhere"){
 
+        
         let lat : NSNumber = NSNumber(value: self.coordinates!.latitude)
         let lng : NSNumber = NSNumber(value: self.coordinates!.longitude)
         
@@ -195,12 +195,7 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
   
         
         let formatter = DateFormatter()
-        // initially set the format based on your datepicker date / server String
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        let myString = formatter.string(from: Date()) // string purpose I add here
-        // convert your string to date
-    
+
         formatter.dateFormat = "dd-MMMM"
         // again convert your date to string
         let arrival = formatter.string(from: tableFlights[indexPath.row].aTime)
@@ -242,6 +237,8 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
         searchTextField.borderStyle = .roundedRect;
         searchTextField.backgroundColor = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         searchTextField.layer.cornerRadius=8.0
+        
+        loadFLightsFromApi()
         
     }
 

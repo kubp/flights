@@ -17,8 +17,10 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var cityFrom: UILabel!
+    @IBOutlet weak var dateFrom: UILabel!
     @IBOutlet weak var price: UILabel!
     @IBOutlet weak var cityTo: UILabel!
+    @IBOutlet weak var dateTo: UILabel!
     @IBOutlet weak var favouriteButton: UIButton!
     @IBAction func favouritesClick(_ sender: Any) {
         self.saveToFavourites()
@@ -61,6 +63,21 @@ class DetailViewController: UIViewController, MKMapViewDelegate {
             cp.text = String(passedValue?.price ?? 0) + " €"
         }
 
+        
+
+        let formatter = DateFormatter()
+        
+        formatter.dateFormat = "dd-MMMM"
+        let arrival = formatter.string(from: (passedValue?.aTime)!)
+        let departure = formatter.string(from: (passedValue?.dTime)!)
+        
+        if let df = dateFrom {
+            df.text = departure
+        }
+        if let da = dateTo {
+            da.text = arrival
+        }
+        
 
         let initialLocation = CLLocation(latitude: 33.9424955, longitude: -118.4080684)
         
