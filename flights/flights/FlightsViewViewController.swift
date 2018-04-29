@@ -66,15 +66,12 @@ class FLightCell: UITableViewCell{
     
     override func layoutSubviews() {
         super.layoutSubviews()
-      //  contentView.frame = UIEdgeInsetsInsetRect(contentView.frame, UIEdgeInsetsMake(0, 20, 0, 20))
     }
-    
-    @IBOutlet weak var tableView: UITableView!
+
 }
 
 class FlightsViewViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate  {
     @IBOutlet weak var searchTextField: UITextField!
-    
     
     
     let singleton = searchResult.shared
@@ -95,7 +92,7 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     @IBAction func searchFlightsAction(_ sender: Any) {
-        var text: String = searchTextField.text!
+        let text: String = searchTextField.text!
         print(text)
         loadFLightsFromApi(to: text)
     
@@ -117,13 +114,12 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
         
         guard let gitUrl = URL(string: "https://api.skypicker.com/flights?adults=1&affilid=stories&asc=1&children=0&dateFrom=28%2F04%2F2018&dateTo=28%2F05%2F2018&daysInDestinationFrom=2&daysInDestinationTo=10&featureName=results&flyFrom="+apiCoordinates+"&infants=0&limit=60&locale=us&offset=0&one_per_date=0&oneforcity=0&partner=skypicker&returnFrom=&returnTo=&sort=quality&to="+to+"&typeFlight=return&v=3&wait_for_refresh=0") else { return }
         
+        
         URLSession.shared.dataTask(with: gitUrl) { (data, response
             , error) in
             
             guard let data = data else { return }
             do {
-                
-                let decoder = JSONDecoder()
                 
                 guard let blog = try? JSONDecoder().decode(FlightsApi.self, from: data) else {
                     print("Error: Couldn't decode data into Blog")
@@ -250,8 +246,6 @@ class FlightsViewViewController: UIViewController, UITableViewDataSource, UITabl
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         let location = locations[0]
-        
-        let center = location.coordinate
         self.coordinates = location.coordinate
         
         loadFLightsFromApi()

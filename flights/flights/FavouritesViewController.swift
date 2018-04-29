@@ -13,7 +13,7 @@ import CoreData
 class FavouritesViewController: UITableViewController {
 var people: [NSManagedObject] = []
    
-
+    
     @IBAction func back(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -57,6 +57,24 @@ var people: [NSManagedObject] = []
         // Dispose of any resources that can be recreated.
     }
 
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        
+        if editingStyle == .delete {
+            let commit = people[indexPath.row]
+            appDelegate.persistentContainer.viewContext.delete(commit)
+            people.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+             appDelegate.saveContext()
+        }
+    }
+    
+    
     // MARK: - Table view data source
 
 
