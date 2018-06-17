@@ -5,7 +5,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,17 +26,12 @@ public class FlightDetailActivity extends AppCompatActivity {
 
                 Bundle extras = getIntent().getExtras();
 
-
                 FlightsDao flightsDao = new FlightsDao(FlightDetailActivity.this);
                 flightsDao.addFlight(new Flight(
                         extras.getFloat("price"),
                         extras.getString("cityFrom"),
                         extras.getString("cityTo"),
                         extras.getString("duration")));
-                Log.e("App", "Failure");
-
-                Log.e("App", flightsDao.getAllFlights().get(0).toString());
-
 
             }
         });

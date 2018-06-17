@@ -5,7 +5,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -45,7 +44,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         extras.getString("cityFrom"),
                         extras.getString("cityTo"),
                         extras.getString("duration")));
-                Log.e("App", "Failure");
 
                 Log.e("App", flightsDao.getAllFlights().get(0).toString());
 

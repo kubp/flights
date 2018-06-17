@@ -3,8 +3,6 @@ package cz.mendelu.flightsearch.flightsearch;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,26 +57,19 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         adapter = new FAQAdapter(flights);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.faq_list);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         recyclerView.setAdapter(adapter);
-
 
         final Button button = (Button) findViewById(R.id.search_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 asyncTask = new MyAsyncTask();
                 asyncTask.delegate = MainActivity.this;
-
                 mEdit = (EditText) findViewById(R.id.search_input);
-
                 asyncTask.execute(mEdit.getText().toString());
 
             }
         });
-
-
     }
 
     @Override
@@ -138,10 +129,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         } catch (JSONException ex) {
             Log.e("App", "Failure", ex);
         }
-
-
     }
-
 
     @Override
     public void onBackPressed() {
@@ -223,8 +211,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     }
 
     private void refreshList() {
-        // flights.clear();
-        //flights.addAll(questionsDao.getAllQuestions());
         adapter.notifyDataSetChanged();
     }
 

@@ -41,7 +41,6 @@ public class FavoritesActivity extends AppCompatActivity {
         });
 
 
-
         flights = new ArrayList<>();
         flightsDao = new FlightsDao(this);
         flights.addAll(flightsDao.getAllFlights());
@@ -49,25 +48,18 @@ public class FavoritesActivity extends AppCompatActivity {
         adapter = new FAQAdapter(flights);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.favorites_list);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         recyclerView.setAdapter(adapter);
-
 
     }
 
     @Override
     public void onBackPressed() {
-
         Intent intent = new Intent();
         intent.putExtra("asd", "Ukoncuji aktivitu FAQ");
         setResult(RESULT_OK, intent);
         finish();
-
-
     }
-
 
     public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FavoriteFlightsViewHolder>{
 
@@ -93,9 +85,6 @@ public class FavoritesActivity extends AppCompatActivity {
             holder.cityFrom.setText(flight.getCityFrom());
             holder.cityTo.setText(flight.getCityTo());
             holder.price.setText(flight.getDuration());
-
-
-
         }
 
         @Override
@@ -109,20 +98,14 @@ public class FavoritesActivity extends AppCompatActivity {
             public TextView cityTo;
             public TextView price;
 
-
             public FavoriteFlightsViewHolder(View itemView) {
                 super(itemView);
                 cityFrom = itemView.findViewById(R.id.cityFrom);
                 cityTo = itemView.findViewById(R.id.cityTo);
                 price = itemView.findViewById(R.id.price);
-
             }
         }
-
-
-
     }
-
 
     private void refreshList(){
         flights.clear();

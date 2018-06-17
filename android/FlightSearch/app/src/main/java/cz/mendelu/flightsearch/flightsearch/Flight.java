@@ -12,37 +12,6 @@ public class Flight {
     private float lngFrom;
     private float lngTo;
 
-    public float getLatFrom() {
-        return latFrom;
-    }
-
-    public void setLatFrom(float latFrom) {
-        this.latFrom = latFrom;
-    }
-
-    public float getLatTo() {
-        return latTo;
-    }
-
-    public void setLatTo(float latTo) {
-        this.latTo = latTo;
-    }
-
-    public float getLngFrom() {
-        return lngFrom;
-    }
-
-    public void setLngFrom(float lngFrom) {
-        this.lngFrom = lngFrom;
-    }
-
-    public float getLngTo() {
-        return lngTo;
-    }
-
-    public void setLngTo(float lngTo) {
-        this.lngTo = lngTo;
-    }
 
     public Flight(float price, String cityFrom, String cityTo, String duration, float latFrom, float latTo, float lngFrom, float lngTo) {
         this.price = price;
@@ -104,6 +73,38 @@ public class Flight {
 
     public void setCityTo(String cityTo) {
         this.cityTo = cityTo;
+    }
+
+    public float getLatFrom() {
+        return latFrom;
+    }
+
+    public void setLatFrom(float latFrom) {
+        this.latFrom = latFrom;
+    }
+
+    public float getLatTo() {
+        return latTo;
+    }
+
+    public void setLatTo(float latTo) {
+        this.latTo = latTo;
+    }
+
+    public float getLngFrom() {
+        return lngFrom;
+    }
+
+    public void setLngFrom(float lngFrom) {
+        this.lngFrom = lngFrom;
+    }
+
+    public float getLngTo() {
+        return lngTo;
+    }
+
+    public void setLngTo(float lngTo) {
+        this.lngTo = lngTo;
     }
 
     @Override
