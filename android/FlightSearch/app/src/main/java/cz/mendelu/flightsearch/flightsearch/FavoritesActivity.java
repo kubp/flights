@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public class FavoritesActivity extends AppCompatActivity {
     }
 
 
-    public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.QuestionViewHolder>{
+    public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FavoriteFlightsViewHolder>{
 
         private ArrayList<Flight> flightArrayList;
 
@@ -79,19 +78,21 @@ public class FavoritesActivity extends AppCompatActivity {
         }
 
         @Override
-        public QuestionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public FavoriteFlightsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater
                     .from(FavoritesActivity.this)
                     .inflate(R.layout.row_flight_item, parent, false);
 
-            return new QuestionViewHolder(view);
+            return new FavoriteFlightsViewHolder(view);
 
         }
 
         @Override
-        public void onBindViewHolder(final QuestionViewHolder holder, int position) {
-            final Flight question = flightArrayList.get(position);
-            holder.question.setText(question.getCityFrom());
+        public void onBindViewHolder(final FavoriteFlightsViewHolder holder, int position) {
+            final Flight flight = flightArrayList.get(position);
+            holder.cityFrom.setText(flight.getCityFrom());
+            holder.cityTo.setText(flight.getCityTo());
+            holder.price.setText(flight.getDuration());
 
 
 
@@ -102,15 +103,18 @@ public class FavoritesActivity extends AppCompatActivity {
             return flightArrayList.size();
         }
 
-        public class QuestionViewHolder extends RecyclerView.ViewHolder{
+        public class FavoriteFlightsViewHolder extends RecyclerView.ViewHolder{
 
-            public TextView question;
+            public TextView cityFrom;
+            public TextView cityTo;
+            public TextView price;
 
 
-
-            public QuestionViewHolder(View itemView) {
+            public FavoriteFlightsViewHolder(View itemView) {
                 super(itemView);
-                question = itemView.findViewById(R.id.cityFrom);
+                cityFrom = itemView.findViewById(R.id.cityFrom);
+                cityTo = itemView.findViewById(R.id.cityTo);
+                price = itemView.findViewById(R.id.price);
 
             }
         }

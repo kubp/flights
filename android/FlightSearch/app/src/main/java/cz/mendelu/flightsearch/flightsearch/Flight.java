@@ -44,12 +44,11 @@ public class Flight {
         this.lngTo = lngTo;
     }
 
-    public Flight(float price, String cityFrom, String cityTo, String duration, long id, float latFrom, float latTo, float lngFrom, float lngTo) {
+    public Flight(float price, String cityFrom, String cityTo, String duration, float latFrom, float latTo, float lngFrom, float lngTo) {
         this.price = price;
         this.cityFrom = cityFrom;
         this.cityTo = cityTo;
         this.duration = duration;
-        this.id = id;
         this.latFrom = latFrom;
         this.latTo = latTo;
         this.lngFrom = lngFrom;

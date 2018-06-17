@@ -10,22 +10,48 @@
 
     <TextView
         android:id="@+id/cityFrom"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="12dp"
         android:maxLines="1"
-        android:textColor="@color/colorPrimary"/>
+        android:text="PRQ"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:textColor="#585858" />
 
     <TextView
         android:id="@+id/cityTo"
-        android:layout_below="@id/cityFrom"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:maxLines="2"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="76dp"
         android:ellipsize="end"
-        android:textColor="@android:color/darker_gray"/>
+        android:maxLines="2"
+        android:text="LAX"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+        android:textColor="#585858"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="23dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/cityFrom"
+        android:lineSpacingExtra="8sp"
+        android:text=" →"
+        android:textSize="24sp" />
 
 
 </RelativeLayout>

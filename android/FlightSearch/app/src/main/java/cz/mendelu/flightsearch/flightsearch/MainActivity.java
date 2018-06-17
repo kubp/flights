@@ -1,7 +1,5 @@
 package cz.mendelu.flightsearch.flightsearch;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -27,6 +26,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -35,15 +35,16 @@ interface AsyncResponse {
     void processFinish(JSONArray output);
 }
 
-public class MainActivity extends AppCompatActivity implements AsyncResponse{
+public class MainActivity extends AppCompatActivity implements AsyncResponse {
     MyAsyncTask asyncTask;
 
     private static final int DETAIL_REQUEST_CODE = 100;
 
     private ArrayList<Flight> flights;
-  //  private QuestionsDao questionsDao;
+    //  private QuestionsDao questionsDao;
     private FAQAdapter adapter;
     private Toolbar toolbar;
+    EditText mEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,22 +53,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-       // String message = getIntent().getStringExtra("test");
-
-
         flights = new ArrayList<>();
-
-        flights.add(new Flight(40,"dadsa", "asdas", "asass"));
 
 
         adapter = new FAQAdapter(flights);
@@ -79,19 +65,16 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         recyclerView.setAdapter(adapter);
 
 
-
-
         final Button button = (Button) findViewById(R.id.search_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 asyncTask = new MyAsyncTask();
                 asyncTask.delegate = MainActivity.this;
 
-                asyncTask.execute();
+                mEdit = (EditText) findViewById(R.id.search_input);
 
+                asyncTask.execute(mEdit.getText().toString());
 
-//                flights.add(new Flight(40,"dadsa", "asdas"));
-//                adapter.notifyDataSetChanged();
             }
         });
 
@@ -131,26 +114,24 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
         try {
             flights.clear();
-        for (int i = 0; i < rawFlights.length(); i++)
-        {
-            String flyTo = rawFlights.getJSONObject(i).getString("flyTo");
-            String flyFrom = rawFlights.getJSONObject(i).getString("flyFrom");
-            int price = rawFlights.getJSONObject(i).getInt("price");
-            String fly_duration = rawFlights.getJSONObject(i).getString("fly_duration");
-//            float lngTo = rawFlights.getJSONObject(i).getInt("lngTo");
-//            float lngFrom = rawFlights.getJSONObject(i).getInt("lngFrom");
-//            float latTo = rawFlights.getJSONObject(i).getInt("latTo");
-//            float latFrom = rawFlights.getJSONObject(i).getInt("latFrom");
+            for (int i = 0; i < rawFlights.length(); i++) {
+                JSONArray routes = rawFlights.getJSONObject(i).getJSONArray("route");
+
+                String flyTo = rawFlights.getJSONObject(i).getString("flyTo");
+                String flyFrom = rawFlights.getJSONObject(i).getString("flyFrom");
+                int price = rawFlights.getJSONObject(i).getInt("price");
+                String fly_duration = rawFlights.getJSONObject(i).getString("fly_duration");
+                float lngTo = BigDecimal.valueOf(routes.getJSONObject(routes.length() - 1).getDouble("lngTo")).floatValue();
+                float latTo = BigDecimal.valueOf(routes.getJSONObject(routes.length() - 1).getDouble("latTo")).floatValue();
+                float lngFrom = BigDecimal.valueOf(routes.getJSONObject(0).getDouble("lngFrom")).floatValue();
+                float latFrom = BigDecimal.valueOf(routes.getJSONObject(0).getDouble("latFrom")).floatValue();
+
+                flights.add(new Flight(price, flyFrom, flyTo, fly_duration, latFrom, latTo, lngFrom, lngTo));
+
+                Log.e("App", Float.toString(BigDecimal.valueOf(routes.getJSONObject(0).getDouble("latFrom")).floatValue()));
 
 
-          flights.add(new Flight(price,flyFrom, flyTo, fly_duration));
-
-
-            // Log.e("App", post_id);
-
-
-
-        }
+            }
 
             adapter.notifyDataSetChanged();
 
@@ -162,23 +143,16 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
     }
 
 
-
-
     @Override
     public void onBackPressed() {
-
         Intent intent = new Intent();
-        intent.putExtra("MESSAGE", "Ukoncuji aktivitu FAQ");
+        intent.putExtra("MESSAGE", "konec");
         setResult(RESULT_OK, intent);
         finish();
 
-
     }
 
-
-
-
-    public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.QuestionViewHolder>{
+    public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.FlightViewHolder> {
 
         private ArrayList<Flight> flightArrayList;
 
@@ -187,19 +161,21 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         }
 
         @Override
-        public QuestionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public FlightViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater
                     .from(MainActivity.this)
                     .inflate(R.layout.row_flight_item, parent, false);
 
-            return new QuestionViewHolder(view);
+            return new FlightViewHolder(view);
 
         }
 
         @Override
-        public void onBindViewHolder(final QuestionViewHolder holder, int position) {
+        public void onBindViewHolder(final FlightViewHolder holder, int position) {
             final Flight flight = flightArrayList.get(position);
-            holder.question.setText(flight.getCityFrom());
+            holder.cityFrom.setText(flight.getCityFrom());
+            holder.cityTo.setText(flight.getCityTo());
+            holder.price.setText(Float.toString(flight.getPrice()) + " €");
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -212,10 +188,16 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                     intent.putExtra("cityTo", flight.getCityTo());
                     intent.putExtra("price", Float.toString(flight.getPrice()));
                     intent.putExtra("duration", flight.getDuration());
+
+                    intent.putExtra("latFrom", flight.getLatFrom());
+                    intent.putExtra("latTo", flight.getLatTo());
+                    intent.putExtra("lngFrom", flight.getLngFrom());
+                    intent.putExtra("lngTo", flight.getLngTo());
+
+
                     startActivityForResult(intent, DETAIL_REQUEST_CODE);
                 }
             });
-
 
         }
 
@@ -224,25 +206,24 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
             return flightArrayList.size();
         }
 
-        public class QuestionViewHolder extends RecyclerView.ViewHolder{
+        public class FlightViewHolder extends RecyclerView.ViewHolder {
 
-            public TextView question;
+            public TextView cityFrom;
+            public TextView cityTo;
+            public TextView price;
 
-
-            public QuestionViewHolder(View itemView) {
+            public FlightViewHolder(View itemView) {
                 super(itemView);
-                question = itemView.findViewById(R.id.cityFrom);
-
+                cityFrom = itemView.findViewById(R.id.cityFrom);
+                cityTo = itemView.findViewById(R.id.cityTo);
+                price = itemView.findViewById(R.id.price);
             }
         }
 
-
-
     }
 
-
-    private void refreshList(){
-       // flights.clear();
+    private void refreshList() {
+        // flights.clear();
         //flights.addAll(questionsDao.getAllQuestions());
         adapter.notifyDataSetChanged();
     }
@@ -251,49 +232,39 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == DETAIL_REQUEST_CODE){
+        if (requestCode == DETAIL_REQUEST_CODE) {
             refreshList();
         }
 
     }
 }
 
-
-class MyAsyncTask extends AsyncTask<Void, Void, JSONObject>{
+class MyAsyncTask extends AsyncTask<String, Void, JSONObject> {
     public AsyncResponse delegate = null;
 
-
     @Override
-    protected JSONObject doInBackground(Void... params)
-    {
+    protected JSONObject doInBackground(String... params) {
 
-        String str="https://api.skypicker.com/flights?adults=1&affilid=stories&asc=1&children=0&dateFrom=28%2F07%2F2018&dateTo=28%2F08%2F2018&daysInDestinationFrom=2&daysInDestinationTo=10&featureName=results&flyFrom=49.2-16.61-250km&infants=0&limit=60&locale=us&offset=0&one_per_date=0&oneforcity=0&partner=skypicker&returnFrom=&returnTo=&sort=quality&to=LAX&typeFlight=return&v=3&wait_for_refresh=0";
+        String str = "https://api.skypicker.com/flights?adults=1&affilid=stories&asc=1&children=0&dateFrom=28%2F07%2F2018&dateTo=28%2F08%2F2018&daysInDestinationFrom=&daysInDestinationTo=10&featureName=results&flyFrom=49.2-16.61-250km&infants=0&limit=60&locale=us&offset=0&one_per_date=0&oneforcity=0&partner=skypicker&returnFrom=&returnTo=&sort=quality&to=" + params[0] + "&typeFlight=oneway&v=3&wait_for_refresh=0";
         URLConnection urlConn = null;
         BufferedReader bufferedReader = null;
-        try
-        {
+        try {
             URL url = new URL(str);
             urlConn = url.openConnection();
             bufferedReader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
 
             StringBuffer stringBuffer = new StringBuffer();
             String line;
-            while ((line = bufferedReader.readLine()) != null)
-            {
+            while ((line = bufferedReader.readLine()) != null) {
                 stringBuffer.append(line);
             }
 
             return new JSONObject(stringBuffer.toString());
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             Log.e("App", "yourDataTask", ex);
             return null;
-        }
-        finally
-        {
-            if(bufferedReader != null)
-            {
+        } finally {
+            if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
                 } catch (IOException e) {
@@ -304,28 +275,12 @@ class MyAsyncTask extends AsyncTask<Void, Void, JSONObject>{
     }
 
     @Override
-    protected void onPostExecute(JSONObject response)
-    {
-        if(response != null)
-        {
-
+    protected void onPostExecute(JSONObject response) {
+        if (response != null) {
             try {
-               // Log.e("App", response.getString("data"));
-
-
-                JSONArray arr =  response.getJSONArray("data");
+                JSONArray arr = response.getJSONArray("data");
                 delegate.processFinish(arr);
-                for (int i = 0; i < arr.length(); i++)
-                {
-                    String post_id = arr.getJSONObject(i).getString("flyTo");
-                  // Log.e("App", post_id);
 
-
-
-                }
-
-
-               // Log.e("App", "Success: " + response.getString("yourJsonElement") );
             } catch (JSONException ex) {
                 Log.e("App", "Failure", ex);
             }

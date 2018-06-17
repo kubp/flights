@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 FlightsDao flightsDao = new FlightsDao(MapsActivity.this);
                 flightsDao.addFlight(new Flight(
-                        extras.getFloat("price"),
+                        extras.getInt("price"),
                         extras.getString("cityFrom"),
                         extras.getString("cityTo"),
                         extras.getString("duration")));
@@ -52,27 +53,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
 
         Bundle extras = getIntent().getExtras();
 
 
         if (extras != null) {
-            TextView from = (TextView) findViewById(R.id.detailCityFrom);
+            TextView from = (TextView) findViewById(R.id.detailCityTo);
             from.setText(extras.getString("cityFrom"));
 
 
-            TextView to = (TextView) findViewById(R.id.detailCityTo);
+            TextView to = (TextView) findViewById(R.id.detailCityFrom);
             to.setText(extras.getString("cityTo"));
 
 
             TextView price = (TextView) findViewById(R.id.detailPrice);
-            price.setText(extras.getString("price"));
+            price.setText(extras.getString("price") + " €");
 
 
             TextView duration = (TextView) findViewById(R.id.detailDuration);
@@ -92,15 +90,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+        Bundle extras = getIntent().getExtras();
+
+        float latFrom = extras.getFloat("latFrom");
+        float latTo = extras.getFloat("latTo");
+        float lngFrom = extras.getFloat("lngFrom");
+        float lngTo =  extras.getFloat("lngTo");
+
+
         mMap = googleMap;
         Polyline line = mMap.addPolyline(new PolylineOptions()
-                .add(new LatLng(51.5, -0.1), new LatLng(40.7, 151))
+                .add(new LatLng(latFrom, lngFrom), new LatLng(latTo, lngTo))
                 .width(8)
+                .geodesic(true)
                 .color(Color.BLUE));
 
+
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng from = new LatLng(latFrom, lngFrom);
+        mMap.addMarker(new MarkerOptions().position(from).title(extras.getString("cityFrom")));
+
+        LatLng to = new LatLng(latTo, lngTo);
+        mMap.addMarker(new MarkerOptions().position(to).title(extras.getString("cityTo")));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(from));
     }
 }
