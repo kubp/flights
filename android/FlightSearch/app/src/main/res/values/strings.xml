@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FlightSearch</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_flight_detail">FlightDetailActivity</string>
+    <string name="title_activity_favorites">FavoritesActivity</string>
+    <string name="title_activity_maps">Map</string>
+</resources>
